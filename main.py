@@ -5,19 +5,33 @@ import pandas as pd
 import math
 
 def calculate_col(df: pd.DataFrame):
-    # Zuerst filtern nach Herkunft
-    # Dann filtern nach Wohnort
-    # Alle einzigartigen Einträge in Herkunft
+    """
+    Diese Funktion filtert aus einem DataFrame folgende DataFrames, die zuerst nach dem Herkunftsort und
+    dann nach dem Wohnort Gruppiert werden.
+    Also: Bitburg-Bitburg
+          Bitburg-Köln
+          usw
+    :param df: der zu filternde Frame
+    :return: FilterFrame Iterator
+    """
+
+    # Alle einzigartigen Herkunftsorte
     herkunfte = list(df['Aus welchem Gebiet stammen Sie (in etwa)?'].unique())
     for herkunft in herkunfte:
+
+        # Zuerst den Frame der Herkunftsorte kriegen
         current_unsorted_row: pd.DataFrame = dataframe.loc[dataframe['Aus welchem Gebiet stammen Sie (in etwa)?'] == herkunft]
         for herkunft in herkunfte:
+
+            # Anschließend nach Wohnort sortieren
             sorted_row: pd.DataFrame = \
                 current_unsorted_row.loc[current_unsorted_row['In welchem Gebiet leben Sie aktuell (in etwa)?'] == herkunft]
             if not sorted_row.empty:
                 yield sorted_row
 
 def calculate_unique(df: pd.DataFrame):
+
+    # Diese hier interessieren uns
     interesting_columns = [
      'acheln',
      'Aschpes',
@@ -41,15 +55,20 @@ def calculate_unique(df: pd.DataFrame):
      'Zores',
     ]
 
+    # Für Print und Namenszwecke
     herkunft = df['Aus welchem Gebiet stammen Sie (in etwa)?'].iloc[0]
     wohnort = df['In welchem Gebiet leben Sie aktuell (in etwa)?'].iloc[0]
 
+    # Neue Tabelle mit Indizes = Wörter und Spaltennamen = Zahlen von 1 - 34
     tabelle = pd.DataFrame(index=interesting_columns, columns=[str(int(i)) for i in range(34)])
 
     for col in interesting_columns:
+        # Vorkommnisse von Schlüsseln
         occs: pd.Series = df[col].value_counts()
         for key, val in occs.iteritems():
+            # Manche Schlüssel sind im Format 8, 9
             for entry in key.split(','):
+                # Shadowing val to not lose it when changing in later on old entry
                 shadow_val = val
                 entry: str = entry.strip()
                 if entry == '':
@@ -68,6 +87,7 @@ if __name__ == '__main__':
         dataframe = pd.read_csv(file, sep=';', dtype=str)
         names = list(dataframe.columns)
 
+        # Sort by these columns first
         sorted = dataframe.sort_values(['Aus welchem Gebiet stammen Sie (in etwa)?',
                                         'In welchem Gebiet leben Sie aktuell (in etwa)?'])
 
