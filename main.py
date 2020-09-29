@@ -4,6 +4,11 @@ from pprint import pprint
 import pandas as pd
 import math
 
+# die gesamte Spalte x
+# Dann gib mir die Anzahl in dieser Spalte
+# Pick mir jetzt bitte alle gesammelten Zahlen und Anzahlen raus
+#
+
 def calculate_col(df: pd.DataFrame):
     """
     Diese Funktion filtert aus einem DataFrame folgende DataFrames, die zuerst nach dem Herkunftsort und
@@ -91,8 +96,9 @@ if __name__ == '__main__':
         sorted = dataframe.sort_values(['Aus welchem Gebiet stammen Sie (in etwa)?',
                                         'In welchem Gebiet leben Sie aktuell (in etwa)?'])
 
-        for sorted_row in calculate_col(sorted):
-            table = calculate_unique(sorted_row)
-            table.to_csv('./tables/'+table.name + '.csv')
+        table = calculate_unique(sorted)
+        #for sorted_row in calculate_col(sorted):
+       #     table = calculate_unique(sorted_row)
+        table.to_csv('./tables/'+ 'total' + '.csv')
 
 
