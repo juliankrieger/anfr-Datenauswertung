@@ -75,7 +75,7 @@ def calculate_unique(df: pd.DataFrame):
                     continue
                 old_entry = tabelle.loc[col, entry]
                 if not math.isnan(old_entry):
-                    shadow_val = int(entry) + int(old_entry)
+                    shadow_val = int(shadow_val) + int(old_entry)
                 tabelle.loc[col, entry] = shadow_val
         print(f'Wort {col} hat für Herkunft {herkunft} und Wohnort {wohnort} folgende Schlüssel: ')
         pprint(occs)
